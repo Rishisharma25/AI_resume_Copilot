@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="split-screen-layout">
+    <div class="split-left">
+        <div class="split-left-brand">RS<span>.</span></div>
+        <h1>Create account</h1>
+        <p>Start your journey<br>now with us</p>
+    </div>
+
+    <div class="split-right">
+        <div class="auth-card-modern">
+            <h2>Create an account</h2>
+
+            <form method="post">
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="RS@gmail.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn-primary-blue">Create account</button>
+            </form>
+
+            <a href="/login/google" class="social-btn-modern" style="text-decoration: none;">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                Continue with Google
+            </a>
+
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <a href="/login/github" class="social-btn-modern"
+                    style="background: white; border: 1px solid #EEEEEE; color: #393E46; text-decoration: none;">
+                    <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub">
+                    GitHub
+                </a>
+                <a href="/login/linkedin" class="social-btn-modern"
+                    style="background: white; border: 1px solid #EEEEEE; color: #393E46; text-decoration: none;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+                    LinkedIn
+                </a>
+            </div>
+
+            <p style="text-align: center; margin-top: 25px; font-size: 13px; color: #929AAB;">
+                Already have an account? <a href="/login"
+                    style="color: #0066FF; text-decoration: none; font-weight: 600;">Log in</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

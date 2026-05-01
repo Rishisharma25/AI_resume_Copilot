@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: flex; gap: 20px;">
+    <!-- LEFT COLUMN: Resume Builder -->
+    <div class="card" style="flex: 2;">
+        <h2>📝 Resume Builder</h2>
+        <p class="sub-text">Build your master resume here. It will be automatically used when you analyze a new role on the Dashboard.</p>
+        
+        <form action="/profile" method="POST">
+            <input type="hidden" name="action" value="update_resume">
+            
+            <h3>Personal Information</h3>
+            <input type="text" name="full_name" placeholder="Full Name" value="{{ resume_data.get('full_name', '') }}" required>
+            <input type="text" name="contact" placeholder="Contact (Email, Phone, Location)" value="{{ resume_data.get('contact', '') }}" required>
+            
+            <h3>Professional Summary</h3>
+            <textarea name="summary" placeholder="Brief overview of your career and goals" rows="3">{{ resume_data.get('summary', '') }}</textarea>
+            
+            <h3>Work Experience</h3>
+            <textarea name="experience" placeholder="Company Name - Role&#10;- Key achievement 1&#10;- Key achievement 2" rows="6">{{ resume_data.get('experience', '') }}</textarea>
+            
+            <h3>Education</h3>
+            <textarea name="education" placeholder="University Name - Degree&#10;Graduation Year" rows="3">{{ resume_data.get('education', '') }}</textarea>
+            
+            <h3>Technical Skills</h3>
+            <textarea name="skills" placeholder="Python, React, SQL, AWS..." rows="3">{{ resume_data.get('skills', '') }}</textarea>
+            
+            <button type="submit" style="margin-top: 20px;">Save Resume</button>
+        </form>
+    </div>
+
+    <!-- RIGHT COLUMN: Account & Stats -->
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 20px;">
+        <div class="card">
+            <h2>Account Stats</h2>
+            <div style="font-size: 40px; font-weight: bold; color: #10b981;">
+                {{ report_count }}
+            </div>
+            <p class="sub-text">Total Resumes Analyzed</p>
+            <p style="margin-top: 10px;"><strong>Email:</strong> {{ user_email }}</p>
+        </div>
+
+        <div class="card">
+            <h2>Change Password</h2>
+            <form action="/profile" method="POST">
+                <input type="hidden" name="action" value="update_password">
+                <input type="password" name="current_password" placeholder="Current Password" required>
+                <input type="password" name="new_password" placeholder="New Password" required>
+                <button type="submit" style="background: #ef4444;">Update Password</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

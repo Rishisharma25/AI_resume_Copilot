@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Your History</h2>
+{% for r in reports %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: start;">
+        <div>
+            <p><strong>Resume Preview:</strong></p>
+            <p>{{ r.resume[:150] }}...</p>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+            <div class="{% if r.result.get('ats_score', 0)|int >= 80 %}bg-green{% elif r.result.get('ats_score', 0)|int >= 50 %}bg-yellow{% else %}bg-red{% endif %}" style="color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 14px;">
+                ATS Match: {{ r.result.get('ats_score', 0) }}%
+            </div>
+            
+            <form action="/delete-history/{{ r.id }}" method="POST" style="margin: 0;" onsubmit="return confirm('Are you sure you want to delete this report?');">
+                <button type="submit" style="background: #ef4444; color: white; padding: 6px 12px; font-size: 12px; margin: 0; box-shadow: none;">Delete</button>
+            </form>
+            
+            <button onclick="downloadPDF(this)" style="background: #393E46; padding: 6px 12px; font-size: 12px; margin: 0; box-shadow: none;">⬇️ PDF</button>
+        </div>
+    </div>
+
+    <hr style="border-color: #929AAB; margin-top: 15px; margin-bottom: 20px;">
+
+    {% if r.result.get("ats_suggestions") %}
+    <h3>How to Improve Your ATS Score</h3>
+    <ul>
+        {% for s in r.result.get("ats_suggestions", []) %}
+        <li><span class="markdown-text">{{ s }}</span></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h3>Skills</h3>
+    <ul>
+        {% for s in r.result.get("skills", []) %}
+        <li><span class="markdown-text">{{ s}}</span></li>
+        {% endfor %}
+    </ul>
+    <h3>Missing Skills</h3>
+    <ul>
+        {% for s in r.result.get("missing_skills", []) %}
+        <li><span class="markdown-text">{{ s}}</span></li>
+        {% endfor %}
+    </ul>
+
+    <h3>Roadmap</h3>
+    <ul>
+        {% for s in r.result.get("roadmap", []) %}
+        <li><span class="markdown-text">{{ s}}</span></li>
+        {% endfor %}
+    </ul>
+
+    <h3>Interview Questions</h3>
+    <ul>
+        {% for s in r.result.get("interview_questions", []) %}
+        <li><span class="markdown-text">{{ s }}</span></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endfor %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+function downloadPDF(button) {
+    const card = button.closest('.card');
+    
+    // hide the buttons so they don't appear in the PDF
+    const btnContainer = button.parentElement;
+    btnContainer.style.display = 'none';
+    
+    const opt = {
+        margin:       0.5,
+        filename:     'Resume_Report.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    
+    html2pdf().set(opt).from(card).save().then(() => {
+        btnContainer.style.display = 'flex'; // show buttons again
+    });
+}
+</script>
+
+{% endblock %}

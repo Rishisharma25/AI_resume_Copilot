@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="loading-overlay" class="loading-overlay" style="display: none;">
+    <div class="spinner"></div>
+    <h3>Analyzing your resume... 🤖</h3>
+</div>
+
+<h2>Welcome, {{ user }}! </h2>
+<div class="card">
+    <h3>Resume Analyser</h3>
+    <form method="post" enctype="multipart/form-data" onsubmit="document.getElementById('loading-overlay').style.display='flex';">
+        <textarea name="resume" placeholder = "Paste Your Resume(optional)"></textarea>
+        <p>OR upload file:</p>
+        <input type="file" name="file">
+        <input name = "role" placeholder = "What do you want to become? (e.g Data Analyst)" required>
+        <button type="submit">Analyse</button>
+    </form>
+</div>
+
+{% if result %}
+<div class="red">
+    {% if result.error %}
+    <p style="color: red;"> Error: {{result.error}}</p>
+    {% else %}
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <h3 style="margin: 0;">ATS Match Score:</h3>
+            <div class="{% if result.get('ats_score', 0)|int >= 80 %}bg-green{% elif result.get('ats_score', 0)|int >= 50 %}bg-yellow{% else %}bg-red{% endif %}" style="color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 18px;">
+                {{ result.get('ats_score', 0) }}%
+            </div>
+        </div>
+        <button id="pdf-btn" onclick="downloadDashboardPDF()" style="background: #393E46; padding: 8px 16px; font-size: 14px; margin: 0;">⬇️ Download PDF</button>
+    </div>
+    <hr style="border-color: #929AAB; margin-bottom: 20px;">
+    
+    {% if result.get("ats_suggestions") %}
+    <h3>How to Improve Your ATS Score</h3>
+    <ul>
+        {% for s in result.get("ats_suggestions", []) %}
+        <li><span class="markdown-text">{{ s }}</span></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h3>Skills</h3>
+    <ul>
+        {% for s in result.get("skills", []) %}
+        <li><span class="markdown-text">{{ s}}</span></li>
+        {% endfor %}
+    </ul>
+    <h3>Missing Skills</h3>
+    <ul>
+        {% for s in result.get("missing_skills", []) %}
+        <li><span class="markdown-text">{{ s}}</span></li>
+        {% endfor %}
+    </ul>
+
+    <h3>Roadmap</h3>
+    <ul>
+        {% for s in result.get("roadmap", []) %}
+        <li><span class="markdown-text">{{ s}}</span></li>
+        {% endfor %}
+    </ul>
+
+    <h3>Interview Questions</h3>
+    <ul>
+        {% for s in result.get("interview_questions", []) %}
+        <li><span class="markdown-text">{{ s }}</span></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endif %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+function downloadDashboardPDF() {
+    const reportDiv = document.querySelector('.red'); 
+    const btn = document.getElementById('pdf-btn');
+    
+    btn.style.display = 'none';
+    
+    const opt = {
+        margin:       0.5,
+        filename:     'AI_Resume_Analysis.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    
+    html2pdf().set(opt).from(reportDiv).save().then(() => {
+        btn.style.display = 'block';
+    });
+}
+</script>
+
+{% endblock %}

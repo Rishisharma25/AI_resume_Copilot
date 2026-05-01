@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Career Copilot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            {% if session.get('user') %}
+            <nav>
+                <a href="/history">History</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/profile">Profile</a>
+                <a href="/logout">Logout</a>
+            </nav>
+            {% else %}
+            <!-- Hide nav on login/signup pages -->
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="toast toast-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // Parse markdown text
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll('.markdown-text').forEach(el => {
+                if (el.textContent) {
+                    el.innerHTML = marked.parseInline(el.textContent);
+                }
+            });
+        });
+
+        // Auto-hide toasts after 4 seconds
+        setTimeout(() => {
+            const toasts = document.querySelectorAll('.toast');
+            toasts.forEach(toast => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 500);
+            });
+        }, 4000);
+    </script>
+
+    <footer>
+        <p>@2026 AI Career Copilot</p>
+    </footer>
+</body>
+</html>
