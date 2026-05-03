@@ -12,7 +12,7 @@ from authlib.integrations.flask_client import OAuth
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "secret123"
+app.secret_key = os.environ.get("SECRET_KEY", "fallback-secret")
 
 oauth = OAuth(app)
 
