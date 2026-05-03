@@ -14,42 +14,42 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "fallback-secret")
 
-oauth = OAuth(app)
+#oauth = OAuth(app)
 
 # Google
-oauth.register(
-    name='google',
-    client_id=os.environ.get('GOOGLE_CLIENT_ID'),
-    client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
-    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
-    client_kwargs={'scope': 'openid email profile'}
-)
+# oauth.register(
+#     name='google',
+#     client_id=os.environ.get('GOOGLE_CLIENT_ID'),
+#     client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
+#     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+#     client_kwargs={'scope': 'openid email profile'}
+# )
 
 # GitHub
-oauth.register(
-    name='github',
-    client_id=os.environ.get('GITHUB_CLIENT_ID'),
-    client_secret=os.environ.get('GITHUB_CLIENT_SECRET'),
-    access_token_url='https://github.com/login/oauth/access_token',
-    access_token_params=None,
-    authorize_url='https://github.com/login/oauth/authorize',
-    authorize_params=None,
-    api_base_url='https://api.github.com/',
-    client_kwargs={'scope': 'user:email'},
-)
+# oauth.register(
+#     name='github',
+#     client_id=os.environ.get('GITHUB_CLIENT_ID'),
+#     client_secret=os.environ.get('GITHUB_CLIENT_SECRET'),
+#     access_token_url='https://github.com/login/oauth/access_token',
+#     access_token_params=None,
+#     authorize_url='https://github.com/login/oauth/authorize',
+#     authorize_params=None,
+#     api_base_url='https://api.github.com/',
+#     client_kwargs={'scope': 'user:email'},
+# )
 
 # LinkedIn
-oauth.register(
-    name='linkedin',
-    client_id=os.environ.get('LINKEDIN_CLIENT_ID'),
-    client_secret=os.environ.get('LINKEDIN_CLIENT_SECRET'),
-    access_token_url='https://www.linkedin.com/oauth/v2/accessToken',
-    authorize_url='https://www.linkedin.com/oauth/v2/authorization',
-    api_base_url='https://api.linkedin.com/v2/',
-    client_kwargs={'scope': 'r_liteprofile r_emailaddress'},
-)
+# oauth.register(
+#     name='linkedin',
+#     client_id=os.environ.get('LINKEDIN_CLIENT_ID'),
+#     client_secret=os.environ.get('LINKEDIN_CLIENT_SECRET'),
+#     access_token_url='https://www.linkedin.com/oauth/v2/accessToken',
+#     authorize_url='https://www.linkedin.com/oauth/v2/authorization',
+#     api_base_url='https://api.linkedin.com/v2/',
+#     client_kwargs={'scope': 'r_liteprofile r_emailaddress'},
+# )
 
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
 
 # Home
 @app.route('/')
